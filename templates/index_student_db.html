@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <style>
+        .top-container{
+            width: 900px;
+            height: 100%;
+            margin-left: calc(50% - 500px);
+            padding: 50px;
+        }
+        img{
+            width: 100%;
+        }
+        .input-container{
+            margin: 30px;
+            display: flex;
+            justify-content: space-around;
+        }
+        ul{
+            padding: 50px;
+            margin-top: 30px;
+        }
+        button{
+            margin: 3px 15px 3px 15px;
+        }
+    </style>
+</head>
+<body>
+    <script>
+        $.ajax({
+            type: "GET",
+            url: "/student/list",
+            data:{},
+            success: function(response){
+                // response = [{age:98, id:1, name:'박길동'}]
+                for (student of response){
+                    $("#studentList").append(`
+                    <li>
+                        id : ${student.id},
+                        이름 : ${student.name},
+                        나이 : ${student.age}
+                    </li>
+                    `)
+                }
+                
+            }
+        })
+
+        function update_list(){
+            let checked = $('input[name=student]:checked').val()
+            if (checked === 'post'){
+                post_student()
+            }
+            else if (checked === 'put'){
+                put_student()
+            }
+            else if (checked === 'delete'){
+                delete_student()
+            }
+
+        }
+
+        function post_student(){
+            $.ajax({
+                type: "POST",
+                url: "/student",
+                data: {
+                    "id":$("#studentId").val(),
+                    "name":$("#studentName").val(),
+                    "age":$("#studentAge").val()
+                },
+                success: function(response){
+                    console.log(response)
+                    alert('저장되었습니다')
+                    location.reload()
+                }
+            })
+        }
+        function put_student(){
+            $.ajax({
+                type: "PUT",
+                url: "/student",
+                data: {
+                    "id":$("#studentId").val(),
+                    "name":$("#studentName").val(),
+                    "age":$("#studentAge").val()
+                },
+                success: function(response){
+                    console.log(response)
+                    alert('수정되었습니다')
+                    location.reload()
+                }
+            })
+        }
+        function delete_student(){
+            const id = $("#studentId").val()
+            $.ajax({
+                type: "DELETE",
+                url: `/student?id=${id}`,
+                data: {},
+                success: function(response){
+                    console.log(response)
+                    alert('삭제되었습니다')
+                    location.reload()
+                }
+            })            
+        }
+    </script>
+
+    <div class="top-container">
+        <div>
+            <img src="{{ url_for('static', filename='student.jpg') }}">
+            <h1>학생 정보 관리 페이지</h1>
+            스타일은 추가적으로 더 꾸며주셔도 됩니다 ^^ (우선은 기능 개발에 집중해보아요!)
+        </div>
+        <div class="input-container">
+            <span>
+                학생 id : <input id="studentId" type="text">
+            </span>
+            <span>
+                학생 이름 : <input id="studentName" type="text">
+            </span>
+            <span>
+                학생 나이 : <input id="studentAge" type="number">
+            </span>
+        </div>
+        <div class="update-container">
+            <span>
+                저장: <input type="radio" name="student" value="post">
+            </span>
+            <span>
+                수정: <input type="radio" name="student" value="put">
+            </span>
+            <span>
+                삭제: <input type="radio" name="student" value="delete">
+            </span>
+            <br>
+            <button onclick="update_list()">
+                학생 저장/수정/삭제 하기
+            </button>
+        </div>
+        
+        <ul id="studentList">
+            
+        </ul>
+                
+    </div>
+</body>
+</html>

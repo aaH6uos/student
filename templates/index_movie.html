@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <style>
+        .top-container{
+            width: 700px;
+            height: 100%;
+            margin-left: calc(50% - 400px);
+            padding: 50px;
+            text-align: center;
+        }
+        img{
+            width: 100%;
+        }
+        .input-container{
+            margin: 20px 23%;
+            display: flex;
+            justify-content: space-around;
+        }
+        table{
+            margin: auto;
+            margin-top: 30px;
+        }
+        td{
+            padding: 3px 15px 3px 15px;
+        }
+        button{
+            margin: 3px 15px 3px 15px;
+        }
+    </style>
+</head>
+<body>
+    <script>
+        $.ajax({
+            type: "GET",
+            url: "/movie",
+            data: {},
+            success: function(response){
+                // console.log(response)
+                for (let movie of response){
+                    $("#movieScore").append(`
+                    <tr>
+                        <td>${movie.name}</td>
+                        <td>${movie.score}</td>
+                    </tr> 
+                    `)
+                }
+            }
+        })
+
+        function saveBtn(){
+            // const inputTitle = $("#title").val()
+            // const inputScore = $("#score").val()
+            // $("#movieScore").append(`
+            // <tr>
+            //     <td>${inputTitle}</td>
+            //     <td>${inputScore}</td>
+            // </tr>
+            // `)
+            $.ajax({
+                type: "POST",
+                url: "/movie",
+                data: {
+                    "name": $("#title").val(),
+                    "score": $("#score").val()
+                },
+                success: function(response){
+                    location.reload()
+                    alert('저장이 완료되었습니다.')                    
+                }
+            })
+        }
+
+        function clearBtn(){
+            // $("#movieScore").empty()
+            $.ajax({
+                type: "DELETE",
+                url: "/movie/all",
+                data: {},
+                success: function(response){
+                    location.reload()
+                    alert('삭제가 완료되었습니다.')
+                }
+            })
+        }
+    </script>
+
+    <div class="top-container">
+        <div>
+            <img src="{{url_for('static', filename='theater.jpg')}}"/>
+            <h1>재미있게 본 영화를 기록해 보아요~</h1>
+            당신은 영화를 좋아하나요? 보았던 영화들의 점수를 기록해 보아요!!
+        </div>
+        <div class="input-container">
+            <span>
+                영화제목 : <input id="title" type="text" style="width:180px">
+            </span>
+            <span>
+                점수 : <input id="score" type="number" style="width: 40px">
+            </span>
+        </div>
+        <button onclick="saveBtn()">
+            저장하기
+        </button>
+        <button onclick="clearBtn()">
+            목록 모두 지우기
+        </button>
+        <table id="movieScore">
+
+        </table>
+
+    </div>
+</body>
+</html>

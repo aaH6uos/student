@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>서버연습</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+  <h1>안녕하세요</h1>
+  <img src="{{ url_for('static', filename='깨진알.jpg') }}">
+  <script>
+      $.ajax({
+        type: "GET",
+        url: "/json-test",
+        data: {},
+        success: function(response) {
+            console.log(response)
+            console.log()
+
+            for(let fruit of response) {
+                console.log(fruit)
+                console.log(fruit.name)
+                console.log(fruit.price)
+            }
+        }
+      })
+
+      $.ajax({
+        type: "GET",
+        url: "/animal?species=강아지&age=10",
+        data: {},
+        success: function(response) {
+        console.log(response)
+        }
+      })
+      $.ajax({
+        type: "POST",
+        url: "/body",
+        data: {
+            "name": "ABC"
+        },
+        success: function(response) {
+        console.log(response)
+        }
+      })
+      $.ajax({
+        type: "POST",
+        url: "/vehicle",
+        data: {
+            type: "택시",
+            price: 1000
+        },
+        success: function(response) {
+            console.log(response)
+        }
+      })
+
+  </script>
+</body>
+</html>
